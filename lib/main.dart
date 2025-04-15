@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // this is bringing us to the LoginPage first
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }

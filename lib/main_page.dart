@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'components/my_bottom_nav_bar.dart';
-import 'components/my_drawer.dart';
+// import 'components/my_drawer.dart';
 import 'pages/home_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/activity_page.dart';
@@ -65,7 +65,6 @@ class _MainPageState extends State<MainPage> {
     */
     return Scaffold(
       backgroundColor: Colors.grey[300],
-
       body: _pages[_selectedIndex],
       bottomNavigationBar: MyBottomNavBar(
         onTabChange: (index) => navigateBottomBar(index),
