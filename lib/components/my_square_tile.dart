@@ -10,9 +10,11 @@ These are custom built buttons that are used as a google & apple sign in.
 
 class SquareTile extends StatelessWidget {
   final String imagePath;
+  final String label;
   const SquareTile({
     super.key,
     required this.imagePath,
+    required this.label,
   });
 
   @override
@@ -24,9 +26,14 @@ class SquareTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         color: Colors.grey[200],
       ),
-      child: Image.asset(
-        imagePath,
-        height: 40,
+      child: Row(
+        children: [
+          Image.asset(
+            imagePath,
+            height: 30,
+          ),
+          Text(' $label'),
+        ],
       ),
     );
   }
