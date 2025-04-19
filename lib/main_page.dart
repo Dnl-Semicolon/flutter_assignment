@@ -43,7 +43,7 @@ class _MainPageState extends State<MainPage> {
   // pages to display
   final List<Widget> _pages = [
     // home page
-    const HomePage(),
+    HomePage(),
 
     // community / leaderboard page
     const CommunityPage(),
@@ -52,7 +52,7 @@ class _MainPageState extends State<MainPage> {
     const ActivityPage(),
 
     // profile page
-    const ProfilePage(),
+    ProfilePage(),
   ];
 
   @override

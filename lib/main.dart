@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:startertemplate/pages/login_page.dart';
+import 'package:startertemplate/pages/auth_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:startertemplate/pages/splashscreen_page.dart';
+import 'firebase_options.dart';
 
 /*
 
@@ -9,8 +12,11 @@ This is the starting point for all apps.
 Everything starts at the main function
 
 */
-void main() {
-  // lets run our app
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -40,7 +46,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // this is bringing us to the LoginPage first
-      home: const LoginPage(),
+      // home: const AuthPage(),
+      home: const SplashScreenPage(),
     );
   }
 }

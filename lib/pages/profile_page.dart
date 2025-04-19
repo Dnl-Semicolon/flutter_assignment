@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user.dart';
@@ -22,12 +23,13 @@ like a star rating
 */
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
     // Sample user data
-    final User user = User(
+    final HardCodeUser hardcodeuser = HardCodeUser(
       id: '1',
       name: 'Daniel Tan',
       initials: 'DT',
@@ -49,7 +51,7 @@ class ProfilePage extends StatelessWidget {
                   radius: 40,
                   backgroundColor: Colors.white,
                   child: Text(
-                    user.initials,
+                    hardcodeuser.initials,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -59,7 +61,8 @@ class ProfilePage extends StatelessWidget {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  user.name,
+                  user.email!,
+                  // 'Daniel Tan',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -77,11 +80,11 @@ class ProfilePage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildStat('${user.rating}', '★ Rating'),
+                    _buildStat('${hardcodeuser.rating}', '★ Rating'),
                     SizedBox(width: 16),
-                    _buildStat('${user.helpRequested}', 'Requested'),
+                    _buildStat('${hardcodeuser.helpRequested}', 'Requested'),
                     SizedBox(width: 16),
-                    _buildStat('${user.helpOffered}', 'Offered'),
+                    _buildStat('${hardcodeuser.helpOffered}', 'Offered'),
                   ],
                 ),
               ],

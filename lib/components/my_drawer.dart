@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:startertemplate/pages/login_page.dart';
 import '../pages/about_page.dart';
+import '../pages/auth_page.dart';
 
 /*
 
@@ -26,6 +28,7 @@ class MyDrawer extends StatelessWidget {
 
   // method to log user out
   void logUserOut(BuildContext context) {
+    FirebaseAuth.instance.signOut();
     // pop drawer
     Navigator.pop(context);
     // pop app
@@ -34,7 +37,7 @@ class MyDrawer extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const LoginPage(),
+        builder: (context) => const AuthPage(),
       ),
     );
   }
