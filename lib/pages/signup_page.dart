@@ -1,50 +1,32 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:startertemplate/main_page.dart';
-import 'package:startertemplate/pages/signup_page.dart';
+import 'package:startertemplate/pages/login_page.dart';
 
-/*
-
-L O G I N P A G E
-
-This is the LoginPage, the first page the user will see based off what was configured in the main.dart file.
-
-Once the user is authenticated, they are directed to the homepage.
-
-When considering logging in users into your app, you must consider AUTHENTICATION:
-
-- email sign in
-- google sign in
-- apple sign in
-- facebook sign in, etc
-
-There are many authentication services including firebase. This is highly dependent on your needs.
-
-*/
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // text editing controllers
+  final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _obscurePassword = true;
+  final _confirmPasswordController = TextEditingController();
 
-  // sign user in method
-  void signUserIn() async {
-    // First validate the form
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  void signUserUp() {
+    // This is just a UI mockup, so minimal functionality
     if (_formKey.currentState?.validate() != true) {
-      // Form is not valid, return early
       return;
     }
+
+    // Show loading indicator
     showDialog(
       context: context,
       builder: (context) {
@@ -54,40 +36,48 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
 
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
+    // Simulate some processing time
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.pop(context); // Close loading dialog
+
+      // Show success dialog
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Account created successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context); // Return to login page
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
       );
-    } on FirebaseAuthException catch (e) {
-      invalidCredentialMessage();
-      return;
-    } finally {
-      Navigator.pop(context);
-    }
-    // once user is authenticated, direct them to the main page
-    // the stream in AuthPage will handle it
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => const MainPage(),
-    //   ),
-    // );
+    });
   }
 
   @override
   void dispose() {
-    super.dispose();
+    _fullNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _fullNameController.text = '';
     _emailController.text = '';
     _passwordController.text = '';
+    _confirmPasswordController.text = '';
   }
 
   @override
@@ -98,8 +88,18 @@ class _LoginPageState extends State<LoginPage> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        // backgroundColor: Colors.grey[300],
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          iconTheme: const IconThemeData(color: Color(0xFF176ABF)),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -108,24 +108,10 @@ class _LoginPageState extends State<LoginPage> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
 
-                      // logo
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     color: const Color(0xFFEAF6FF),
-                      //     borderRadius: BorderRadius.circular(20),
-                      //   ),
-                      //   padding: const EdgeInsets.all(16),
-                      //   child: Image.asset(
-                      //     'assets/images/neighbouraid_logo.png',
-                      //     width: 120,
-                      //     height: 120,
-                      //   ),
-                      // ),
                       Center(
                         child: Container(
                           decoration: BoxDecoration(
@@ -141,38 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const SizedBox(height: 24,),
-
-                      // Image.asset(
-                      //   'assets/images/neighbouraid_logo.png',
-                      //   width: 150,
-                      //   height: 150,
-                      // ),
-
-                      /*------ OLD PLACEHOLDER LOGO ------*/
-                      // Icon(
-                      //   Icons.lock,
-                      //   size: 100,
-                      //   color: Colors.grey[900],
-                      // ),
-                      /*------ OLD PLACEHOLDER LOGO ------*/
-                      // welcome back, you've been missed!
-                      // Text(
-                      //   'Welcome back you\'ve been missed!',
-                      //   style: TextStyle(
-                      //     color: Colors.grey[700],
-                      //     fontSize: 16,
-                      //   ),
-                      // ),
-
-                      // Text(
-                      //   'Welcome Back!👋',
-                      //   style: TextStyle(
-                      //     color: Colors.grey[800],
-                      //     fontSize: 16,
-                      //     // fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
+                      const SizedBox(height: 24),
 
                       RichText(
                         textAlign: TextAlign.center,
@@ -183,14 +138,14 @@ class _LoginPageState extends State<LoginPage> {
                             color: Color(0xFF0D3673),
                           ),
                           children: [
-                            TextSpan(text: 'Welcome to ',),
+                            TextSpan(text: 'Join '),
                             TextSpan(
                               text: 'NeighbourAid',
                               style: TextStyle(
                                 color: Color(0xFF004AAD),
                               ),
                             ),
-                            TextSpan(text: ' 👋',),
+                            TextSpan(text: ' today! ✨'),
                           ],
                         ),
                       ),
@@ -199,16 +154,48 @@ class _LoginPageState extends State<LoginPage> {
 
                       const Center(
                         child: Text(
-                          'Help your community, earn rewards!',
+                          'Create an account to help your community',
                           style: TextStyle(
                             fontSize: 16,
-                            // color: Color(0xFF125099),
                             color: Color(0xFF333333),
                           ),
                         ),
                       ),
 
                       const SizedBox(height: 32),
+
+                      TextFormField(
+                        controller: _fullNameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your full name';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Full Name',
+                          prefixIcon: const Icon(
+                            Icons.person_outline,
+                            color: Color(0xFF176ABF),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
+                          ),
+                          fillColor: const Color(0xFFF7F7F7),
+                          filled: true,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
 
                       TextFormField(
                         controller: _emailController,
@@ -237,7 +224,6 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
                           ),
-                          // fillColor: const Color(0xFFEEEEEE),
                           fillColor: const Color(0xFFF7F7F7),
                           filled: true,
                         ),
@@ -283,68 +269,73 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
                           ),
-                          // fillColor: const Color(0xFFEEEEEE),
                           fillColor: const Color(0xFFF7F7F7),
                           filled: true,
                         ),
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
 
-                      // password text field
-                      // MyTextField(
-                      //   controller: _passwordController,
-                      //   hintText: 'Password',
-                      //   obscureText: true,
-                      // ),
-
-                      // remember me (flutter have cookie?)
-
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          child: const Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Color(0xFF2FA0F0),
-                              fontWeight: FontWeight.w600,
-                            ),
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                        obscureText: _obscureConfirmPassword,
+                        decoration: InputDecoration(
+                          hintText: 'Confirm Password',
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: Color(0xFF176ABF),
                           ),
-                          onPressed: (){},
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                              color: const Color(0xFF176ABF),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureConfirmPassword = !_obscureConfirmPassword;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
+                          ),
+                          fillColor: const Color(0xFFF7F7F7),
+                          filled: true,
                         ),
                       ),
 
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 32),
 
-                      // forgot password?
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.end,
-                      //     children: [
-                      //       Text(
-                      //         'Forgot Password?',
-                      //         style: TextStyle(color: Colors.grey[600]),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      //
-                      // const SizedBox(height: 25),
-
-                      // sign in button
                       ElevatedButton(
                         onPressed: () {
-                          signUserIn();
+                          signUserUp();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF004AAD),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12),),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: const Text(
-                          'Sign In',
+                          'Sign Up',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -352,13 +343,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      // MyButton(
-                      //   onTap: signUserIn,
-                      // ),
+                      const SizedBox(height: 32),
 
-                      const SizedBox(height: 50),
-
-                      // or continue with
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Row(
@@ -386,42 +372,39 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 32),
 
-                      // google + apple sign in buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Google Sign-in Button
                           OutlinedButton.icon(
                             onPressed: () {},
                             style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12,),
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               side: const BorderSide(color: Color(0xFFBDBDBD)),
                               backgroundColor: const Color(0xFFFAFAFA),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            icon: Image.asset('assets/images/google.png', width: 24, height: 24,),
+                            icon: Image.asset('assets/images/google.png', width: 24, height: 24),
                             label: const Text(
                               'Google',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
-                          const SizedBox(width: 16,),
-                          // Apple Sign-in Button
+                          const SizedBox(width: 16),
                           OutlinedButton.icon(
                             onPressed: () {},
                             style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12,),
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               side: const BorderSide(color: Color(0xFFBDBDBD)),
                               backgroundColor: const Color(0xFFFAFAFA),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            icon: Image.asset('assets/images/apple.png', width: 24, height: 24,),
+                            icon: Image.asset('assets/images/apple.png', width: 24, height: 24),
                             label: const Text(
                               'Apple',
                               style: TextStyle(color: Colors.black),
@@ -430,28 +413,23 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
 
-                      const SizedBox(height: 24,),
+                      const SizedBox(height: 24),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            'Don\'t have an account?',
+                            'Already have an account?',
                             style: TextStyle(
                               color: Color(0xFF333333),
                             ),
                           ),
                           TextButton(
-                            onPressed: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SignUpPage(),
-                                ),
-                              );
+                            onPressed: () {
+                              Navigator.pop(context);
                             },
                             child: const Text(
-                              'Sign Up',
+                              'Sign In',
                               style: TextStyle(
                                 color: Color(0xFF004AAD),
                                 fontWeight: FontWeight.bold,
@@ -461,21 +439,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
 
-                      const SizedBox(height: 24,),
-
-
-                      // const Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     // google button
-                      //     SquareTile(imagePath: 'assets/images/google.png', label: 'Google'),
-                      //
-                      //     SizedBox(width: 25),
-                      //
-                      //     // apple button
-                      //     SquareTile(imagePath: 'assets/images/apple.png', label: 'Apple')
-                      //   ],
-                      // ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
@@ -484,17 +448,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
-
-  void invalidCredentialMessage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          title: Text('Invalid Credential'),
-        );
-      },
     );
   }
 }

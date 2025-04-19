@@ -1,4 +1,4 @@
-class User {
+class HardCodeUser {
   final String id;
   final String name;
   final String initials;
@@ -6,7 +6,7 @@ class User {
   final int helpOffered;
   final double rating;
 
-  User({
+  HardCodeUser({
     required this.id,
     required this.name,
     required this.initials,
